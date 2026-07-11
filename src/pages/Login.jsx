@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
+import { runtimeConfig } from "@/config/runtime-config";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -29,7 +30,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    const returnUrl = `${window.location.origin}${window.location.pathname}#/`;
+    const returnUrl = `${runtimeConfig.appBaseUrl}/#/`;
     base44.auth.loginWithProvider("google", returnUrl);
   };
 
