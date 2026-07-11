@@ -2,6 +2,12 @@ const isNode = typeof window === 'undefined';
 const windowObj = isNode ? { localStorage: new Map() } : window;
 const storage = windowObj.localStorage;
 
+// These identifiers are public frontend configuration. Environment variables
+// can override them, while the defaults keep static hosts such as GitHub Pages
+// from ever initializing the SDK with a null app ID.
+const DEFAULT_APP_ID = '6a5152f9a3095cd800ed925a';
+const DEFAULT_APP_BASE_URL = 'https://psychedelic-vital-plus-flow.base44.app';
+
 const toSnakeCase = (str) => {
 	return str.replace(/([A-Z])/g, '_$1').toLowerCase();
 }
@@ -40,11 +46,11 @@ const getAppParams = () => {
 		storage.removeItem('token');
 	}
 	return {
-		appId: getAppParamValue("app_id", { defaultValue: import.meta.env.VITE_BASE44_APP_ID }),
+		appId: getAppParamValue("app_id", { defaultValue: import.meta.env.VITE_BASE44_APP_ID || DEFAULT_APP_ID }),
 		token: getAppParamValue("access_token", { removeFromUrl: true }),
 		fromUrl: getAppParamValue("from_url", { defaultValue: window.location.href }),
 		functionsVersion: getAppParamValue("functions_version", { defaultValue: import.meta.env.VITE_BASE44_FUNCTIONS_VERSION }),
-		appBaseUrl: getAppParamValue("app_base_url", { defaultValue: import.meta.env.VITE_BASE44_APP_BASE_URL }),
+		appBaseUrl: getAppParamValue("app_base_url", { defaultValue: import.meta.env.VITE_BASE44_APP_BASE_URL || DEFAULT_APP_BASE_URL }),
 	}
 }
 
