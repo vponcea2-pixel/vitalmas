@@ -1,0 +1,20 @@
+{
+  "name": "HydrationLog",
+  "type": "object",
+  "properties": {
+    "glasses": {
+      "type": "number"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "goal": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "glasses",
+    "date"
+  ]
+}

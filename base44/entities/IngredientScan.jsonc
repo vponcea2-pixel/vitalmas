@@ -1,0 +1,22 @@
+{
+  "name": "IngredientScan",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string"
+    },
+    "ingredient_name": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "scan_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "ingredient_name"
+  ]
+}

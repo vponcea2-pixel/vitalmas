@@ -1,0 +1,23 @@
+{
+  "name": "Favorite",
+  "type": "object",
+  "properties": {
+    "item_type": {
+      "type": "string",
+      "enum": [
+        "recipe",
+        "meal_scan"
+      ]
+    },
+    "item_id": {
+      "type": "string"
+    },
+    "item_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "item_type",
+    "item_id"
+  ]
+}

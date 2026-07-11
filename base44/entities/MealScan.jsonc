@@ -1,0 +1,98 @@
+{
+  "name": "MealScan",
+  "type": "object",
+  "properties": {
+    "image_url": {
+      "type": "string"
+    },
+    "dish_name": {
+      "type": "string"
+    },
+    "calories": {
+      "type": "number"
+    },
+    "protein": {
+      "type": "number"
+    },
+    "carbs": {
+      "type": "number"
+    },
+    "fat": {
+      "type": "number"
+    },
+    "saturated_fat": {
+      "type": "number"
+    },
+    "fiber": {
+      "type": "number"
+    },
+    "sugar": {
+      "type": "number"
+    },
+    "sodium": {
+      "type": "number"
+    },
+    "potassium": {
+      "type": "number"
+    },
+    "iron": {
+      "type": "number"
+    },
+    "calcium": {
+      "type": "number"
+    },
+    "magnesium": {
+      "type": "number"
+    },
+    "zinc": {
+      "type": "number"
+    },
+    "vitamin_a": {
+      "type": "number"
+    },
+    "vitamin_b": {
+      "type": "number"
+    },
+    "vitamin_c": {
+      "type": "number"
+    },
+    "vitamin_d": {
+      "type": "number"
+    },
+    "vitamin_e": {
+      "type": "number"
+    },
+    "benefits": {
+      "type": "string"
+    },
+    "good_for_lose_weight": {
+      "type": "boolean"
+    },
+    "good_for_gain_muscle": {
+      "type": "boolean"
+    },
+    "good_for_maintain_weight": {
+      "type": "boolean"
+    },
+    "scan_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "meal_type": {
+      "type": "string",
+      "enum": [
+        "breakfast",
+        "lunch",
+        "dinner",
+        "snack"
+      ]
+    },
+    "added_to_plan": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "dish_name"
+  ]
+}

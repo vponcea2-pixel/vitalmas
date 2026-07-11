@@ -1,0 +1,81 @@
+{
+  "name": "Recipe",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string",
+      "enum": [
+        "costa",
+        "sierra",
+        "amazonia"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "lose_weight",
+        "gain_muscle",
+        "healthy"
+      ]
+    },
+    "time_minutes": {
+      "type": "number"
+    },
+    "servings": {
+      "type": "number"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ]
+    },
+    "ingredients": {
+      "type": "string"
+    },
+    "preparation": {
+      "type": "string"
+    },
+    "calories": {
+      "type": "number"
+    },
+    "protein": {
+      "type": "number"
+    },
+    "fat": {
+      "type": "number"
+    },
+    "carbs": {
+      "type": "number"
+    },
+    "fiber": {
+      "type": "number"
+    },
+    "vitamins": {
+      "type": "string"
+    },
+    "minerals": {
+      "type": "string"
+    },
+    "benefits": {
+      "type": "string"
+    },
+    "tips": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
