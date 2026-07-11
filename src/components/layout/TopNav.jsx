@@ -4,7 +4,7 @@ import { useAuth } from '@/lib/AuthContext';
 
 export default function TopNav() {
   const { user } = useAuth();
-  const initials = (user?.full_name || 'U').charAt(0).toUpperCase();
+  const initials = (user?.full_name || 'I').charAt(0).toUpperCase();
 
   return (
     <header className="flex items-center justify-between px-5 pt-5 pb-3 bg-background">
@@ -16,7 +16,7 @@ export default function TopNav() {
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#4CAF50] to-[#388E3C] flex items-center justify-center text-white font-bold text-sm">
           {initials}
         </div>
-        <span className="text-[10px] text-muted-foreground">Mi Perfil</span>
+        <span className="text-[10px] text-muted-foreground">{user ? 'Mi Perfil' : 'Invitado'}</span>
       </Link>
     </header>
   );

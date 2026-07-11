@@ -20,9 +20,15 @@ export default function Home() {
   const [todayMeals, setTodayMeals] = useState([]);
   const [activeWeek, setActiveWeek] = useState('W1');
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [user]);
 
   const loadData = async () => {
+    if (!user) {
+      const localProfile = localStorage.getItem('vitalmas_guest_profile');
+      if (localProfile) setProfile(JSON.parse(localProfile));
+      setTodayMeals([]);
+      return;
+    }
     try {
       const profiles = await base44.entities.UserProfile.filter({ created_by_id: user?.id });
       if (profiles.length > 0) setProfile(profiles[0]);
@@ -32,7 +38,7 @@ export default function Home() {
     } catch (e) { /* silent */ }
   };
 
-  const firstName = (profile?.full_name || user?.full_name || 'Usuario').split(' ')[0];
+  const firstName = (profile?.full_name || user?.full_name || 'Invitado').split(' ')[0];
   const totalCalories = todayMeals.reduce((s, m) => s + (m.calories || 0), 0);
 
   return (

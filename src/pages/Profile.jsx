@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useAuth } from '@/lib/AuthContext';
 import { useTheme } from '@/lib/ThemeContext';
-import { User, Edit3, Save, LogOut, Moon, Sun, TrendingUp, Activity, Scale, Ruler } from 'lucide-react';
+import { User, Edit3, Save, LogOut, LogIn, Moon, Sun, TrendingUp, Activity, Scale, Ruler } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion } from 'framer-motion';
 import { useToast } from '@/components/ui/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 const GOALS = [
   { value: 'lose_weight', label: 'Bajar de peso' },
@@ -25,6 +26,7 @@ const ACTIVITY_LEVELS = [
 
 export default function Profile() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const { toast } = useToast();
   const [profile, setProfile] = useState(null);
@@ -38,9 +40,22 @@ export default function Profile() {
   const [mealHistory, setMealHistory] = useState([]);
   const [exerciseHistory, setExerciseHistory] = useState([]);
 
-  useEffect(() => { loadData(); }, []);
+  useEffect(() => { loadData(); }, [user]);
 
   const loadData = async () => {
+    if (!user) {
+      const localProfile = JSON.parse(localStorage.getItem('vitalmas_guest_profile') || 'null');
+      if (localProfile) {
+        setProfile(localProfile);
+        setForm(current => ({ ...current, ...localProfile }));
+      } else {
+        setEditing(true);
+      }
+      setMealHistory([]);
+      setExerciseHistory(JSON.parse(localStorage.getItem('vitalmas_guest_exercises') || '[]'));
+      setLoading(false);
+      return;
+    }
     try {
       const profiles = await base44.entities.UserProfile.filter({ created_by_id: user?.id });
       if (profiles.length > 0) {
@@ -77,6 +92,15 @@ export default function Profile() {
         height: Number(form.height) || null,
         daily_water_goal: Number(form.daily_water_goal) || 8,
       };
+      if (!user) {
+        const localProfile = { id: 'guest-profile', ...data };
+        localStorage.setItem('vitalmas_guest_profile', JSON.stringify(localProfile));
+        setProfile(localProfile);
+        setEditing(false);
+        toast({ title: '✅ Perfil guardado en este dispositivo' });
+        setSaving(false);
+        return;
+      }
       if (profile) {
         await base44.entities.UserProfile.update(profile.id, data);
         setProfile({ ...profile, ...data });
@@ -132,7 +156,7 @@ export default function Profile() {
           </div>
           <div>
             <p className="font-bold text-lg">{form.full_name || 'Sin nombre'}</p>
-            <p className="text-green-100 text-sm">{user?.email}</p>
+            <p className="text-green-100 text-sm">{user?.email || 'Modo invitado'}</p>
           </div>
         </div>
       </div>
@@ -264,8 +288,13 @@ export default function Profile() {
         )}
 
         {/* Logout */}
-        <Button onClick={handleLogout} variant="outline" className="w-full rounded-xl h-11 text-red-500 border-red-200 hover:bg-red-50 dark:hover:bg-red-900/20">
-          <LogOut className="w-4 h-4 mr-2" /> Cerrar sesión
+        <Button
+          onClick={user ? handleLogout : () => navigate('/login')}
+          variant="outline"
+          className="w-full rounded-xl h-11 text-[#4CAF50] border-green-200 hover:bg-green-50 dark:hover:bg-green-900/20"
+        >
+          {user ? <LogOut className="w-4 h-4 mr-2" /> : <LogIn className="w-4 h-4 mr-2" />}
+          {user ? 'Cerrar sesión' : 'Iniciar sesión para sincronizar'}
         </Button>
       </div>
     </div>

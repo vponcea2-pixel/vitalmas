@@ -17,9 +17,17 @@ export default function Hydration() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [user]);
 
   const loadData = async () => {
+    if (!user) {
+      const saved = JSON.parse(localStorage.getItem('vitalmas_guest_hydration') || '{}');
+      setGoal(saved.goal || 8);
+      setHistory(saved.history || []);
+      setTodayLog((saved.history || []).find(log => log.date === today) || null);
+      setLoading(false);
+      return;
+    }
     try {
       const profiles = await base44.entities.UserProfile.filter({ created_by_id: user?.id });
       if (profiles.length > 0 && profiles[0].daily_water_goal) {
@@ -40,6 +48,17 @@ export default function Hydration() {
 
   const updateGlasses = async (delta) => {
     const newGlasses = Math.max(0, glasses + delta);
+    if (!user) {
+      const nextLog = { id: `guest-${today}`, glasses: newGlasses, date: today, goal };
+      const nextHistory = [nextLog, ...history.filter(log => log.date !== today)];
+      setTodayLog(nextLog);
+      setHistory(nextHistory);
+      localStorage.setItem('vitalmas_guest_hydration', JSON.stringify({ goal, history: nextHistory }));
+      if (newGlasses === goal) {
+        toast({ title: '🎉 ¡Meta cumplida!', description: 'Has alcanzado tu meta de hidratación' });
+      }
+      return;
+    }
     try {
       if (todayLog) {
         await base44.entities.HydrationLog.update(todayLog.id, { glasses: newGlasses });
@@ -157,14 +176,22 @@ export default function Hydration() {
           </div>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setGoal(Math.max(1, goal - 1))}
+              onClick={() => {
+                const nextGoal = Math.max(1, goal - 1);
+                setGoal(nextGoal);
+                if (!user) localStorage.setItem('vitalmas_guest_hydration', JSON.stringify({ goal: nextGoal, history }));
+              }}
               className="w-10 h-10 rounded-full bg-muted flex items-center justify-center"
             >
               <Minus className="w-4 h-4" />
             </button>
             <span className="text-2xl font-bold flex-1 text-center">{goal} vasos</span>
             <button
-              onClick={() => setGoal(goal + 1)}
+              onClick={() => {
+                const nextGoal = goal + 1;
+                setGoal(nextGoal);
+                if (!user) localStorage.setItem('vitalmas_guest_hydration', JSON.stringify({ goal: nextGoal, history }));
+              }}
               className="w-10 h-10 rounded-full bg-muted flex items-center justify-center"
             >
               <Plus className="w-4 h-4" />

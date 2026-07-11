@@ -4,6 +4,7 @@ import { Dumbbell, Play, Pause, RotateCcw, Check, ChevronRight } from 'lucide-re
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/lib/AuthContext';
 
 const ROUTINES = {
   beginner: [
@@ -39,6 +40,7 @@ const LEVEL_INFO = {
 };
 
 export default function Exercises() {
+  const { user } = useAuth();
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [currentExercise, setCurrentExercise] = useState(0);
   const [isActive, setIsActive] = useState(false);
@@ -90,6 +92,23 @@ export default function Exercises() {
     setIsActive(false);
     setCompleted(true);
     const info = LEVEL_INFO[selectedLevel];
+    if (!user) {
+      const guestLogs = JSON.parse(localStorage.getItem('vitalmas_guest_exercises') || '[]');
+      localStorage.setItem('vitalmas_guest_exercises', JSON.stringify([
+        {
+          id: `guest-${Date.now()}`,
+          exercise_name: `Rutina ${info.label}`,
+          level: selectedLevel,
+          duration_minutes: info.totalTime,
+          calories_burned: info.totalCal,
+          date: new Date().toISOString().split('T')[0],
+          completed: true,
+        },
+        ...guestLogs,
+      ].slice(0, 20)));
+      toast({ title: '🎉 ¡Rutina completada!', description: 'Progreso guardado en este dispositivo' });
+      return;
+    }
     try {
       await base44.entities.ExerciseLog.create({
         exercise_name: `Rutina ${info.label}`,
