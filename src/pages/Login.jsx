@@ -29,7 +29,8 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    const returnUrl = `${window.location.origin}${window.location.pathname}#/`;
+    base44.auth.loginWithProvider("google", returnUrl);
   };
 
   return (
