@@ -74,7 +74,9 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", `${runtimeConfig.appBaseUrl}/#/`);
+    // OAuth must begin on Base44's trusted app domain. A Google account is
+    // also a valid new account, so this shared sign-in flow covers registration.
+    window.location.assign(`${runtimeConfig.appBaseUrl}/#/login?google=1`);
   };
 
   if (showOtp) {

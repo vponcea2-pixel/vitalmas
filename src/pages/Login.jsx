@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,10 +10,12 @@ import GoogleIcon from "@/components/GoogleIcon";
 import { runtimeConfig } from "@/config/runtime-config";
 
 export default function Login() {
+  const { search } = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleStarted, setGoogleStarted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,9 +33,25 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    const returnUrl = `${runtimeConfig.appBaseUrl}/#/`;
-    base44.auth.loginWithProvider("google", returnUrl);
+    const hostedOrigin = new URL(runtimeConfig.appBaseUrl).origin;
+
+    // GitHub Pages is not an OAuth callback domain registered in Base44.
+    // Start OAuth from the trusted Base44 domain, then return to the app there.
+    if (window.location.origin !== hostedOrigin) {
+      window.location.assign(`${runtimeConfig.appBaseUrl}/#/login?google=1`);
+      return;
+    }
+
+    base44.auth.loginWithProvider("google", `${runtimeConfig.appBaseUrl}/#/`);
   };
+
+  useEffect(() => {
+    const shouldStartGoogle = new URLSearchParams(search).get("google") === "1";
+    if (shouldStartGoogle && !googleStarted) {
+      setGoogleStarted(true);
+      handleGoogle();
+    }
+  }, [search, googleStarted]);
 
   return (
     <AuthLayout
