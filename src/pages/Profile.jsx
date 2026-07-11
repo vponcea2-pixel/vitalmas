@@ -51,7 +51,7 @@ export default function Profile() {
       } else {
         setEditing(true);
       }
-      setMealHistory([]);
+      setMealHistory(JSON.parse(localStorage.getItem('vitalmas_guest_meals') || '[]'));
       setExerciseHistory(JSON.parse(localStorage.getItem('vitalmas_guest_exercises') || '[]'));
       setLoading(false);
       return;

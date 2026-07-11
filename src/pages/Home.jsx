@@ -26,7 +26,9 @@ export default function Home() {
     if (!user) {
       const localProfile = localStorage.getItem('vitalmas_guest_profile');
       if (localProfile) setProfile(JSON.parse(localProfile));
-      setTodayMeals([]);
+      const today = new Date().toISOString().split('T')[0];
+      const meals = JSON.parse(localStorage.getItem('vitalmas_guest_meals') || '[]');
+      setTodayMeals(meals.filter(meal => meal.scan_date === today));
       return;
     }
     try {

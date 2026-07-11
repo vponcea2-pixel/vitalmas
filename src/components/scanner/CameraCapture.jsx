@@ -5,7 +5,7 @@ import { base44 } from '@/api/base44Client';
 export default function CameraCapture({ onCapture, onClose, label = "Toma una foto" }) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const [stream, setStream] = useState(null);
+  const streamRef = useRef(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
@@ -14,13 +14,14 @@ export default function CameraCapture({ onCapture, onClose, label = "Toma una fo
   const startCamera = useCallback(async () => {
     try {
       setError(null);
+      streamRef.current?.getTracks().forEach(track => track.stop());
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode, width: { ideal: 1280 }, height: { ideal: 960 } }
       });
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
       }
-      setStream(mediaStream);
+      streamRef.current = mediaStream;
     } catch (err) {
       setError('No se pudo acceder a la cámara. Verifica los permisos.');
     }
@@ -29,9 +30,10 @@ export default function CameraCapture({ onCapture, onClose, label = "Toma una fo
   useEffect(() => {
     startCamera();
     return () => {
-      if (stream) stream.getTracks().forEach(t => t.stop());
+      streamRef.current?.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
     };
-  }, [facingMode]);
+  }, [startCamera]);
 
   const capture = () => {
     const video = videoRef.current;
@@ -42,7 +44,7 @@ export default function CameraCapture({ onCapture, onClose, label = "Toma una fo
     canvas.getContext('2d').drawImage(video, 0, 0);
     const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
     setCapturedImage(dataUrl);
-    if (stream) stream.getTracks().forEach(t => t.stop());
+    streamRef.current?.getTracks().forEach(track => track.stop());
   };
 
   const retake = () => {
@@ -64,7 +66,7 @@ export default function CameraCapture({ onCapture, onClose, label = "Toma una fo
   };
 
   const handleClose = () => {
-    if (stream) stream.getTracks().forEach(t => t.stop());
+    streamRef.current?.getTracks().forEach(track => track.stop());
     onClose();
   };
 

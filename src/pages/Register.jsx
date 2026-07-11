@@ -9,6 +9,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
+import { runtimeConfig } from "@/config/runtime-config";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -44,8 +45,9 @@ export default function Register() {
       const result = await base44.auth.verifyOtp({ email, otpCode });
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
+        localStorage.setItem('vitalmas_auth_enabled', 'true');
       }
-      window.location.href = "/";
+      window.location.href = `${window.location.origin}${window.location.pathname}#/`;
     } catch (err) {
       setError(err.message || "Invalid verification code");
     } finally {
@@ -67,7 +69,7 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    base44.auth.loginWithProvider("google", `${runtimeConfig.appBaseUrl}/#/`);
   };
 
   if (showOtp) {

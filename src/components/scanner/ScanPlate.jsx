@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import CameraCapture from './CameraCapture';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/lib/AuthContext';
 
 export default function ScanPlate({ onBack }) {
+  const { user } = useAuth();
   const [showCamera, setShowCamera] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [analyzing, setAnalyzing] = useState(false);
@@ -65,14 +67,23 @@ Responde en español con TODA esta información:`,
   const saveMeal = async (mealType) => {
     if (!result) return;
     setSaving(true);
+    const meal = {
+      ...result,
+      id: `guest-${Date.now()}`,
+      image_url: imageUrl,
+      scan_date: new Date().toISOString().split('T')[0],
+      meal_type: mealType,
+      added_to_plan: true,
+    };
+    if (!user) {
+      const meals = JSON.parse(localStorage.getItem('vitalmas_guest_meals') || '[]');
+      localStorage.setItem('vitalmas_guest_meals', JSON.stringify([meal, ...meals].slice(0, 30)));
+      toast({ title: '✅ Guardado', description: `${result.dish_name} se guardó en este dispositivo` });
+      setSaving(false);
+      return;
+    }
     try {
-      await base44.entities.MealScan.create({
-        ...result,
-        image_url: imageUrl,
-        scan_date: new Date().toISOString().split('T')[0],
-        meal_type: mealType,
-        added_to_plan: true
-      });
+      await base44.entities.MealScan.create(meal);
       toast({ title: '✅ Guardado', description: `${result.dish_name} agregado a tu historial` });
     } catch (e) {
       toast({ title: 'Error', description: 'No se pudo guardar', variant: 'destructive' });
