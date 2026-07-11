@@ -43,10 +43,15 @@ export default function Register() {
     setLoading(true);
     try {
       const result = await base44.auth.verifyOtp({ email, otpCode });
+      // Base44 can return a token after verification, but some configurations
+      // require the normal login step. Supporting both makes registration
+      // complete reliably for every new email account.
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
-        localStorage.setItem('vitalmas_auth_enabled', 'true');
+      } else {
+        await base44.auth.loginViaEmailPassword(email, password);
       }
+      localStorage.setItem('vitalmas_auth_enabled', 'true');
       window.location.href = `${window.location.origin}${window.location.pathname}#/`;
     } catch (err) {
       setError(err.message || "Invalid verification code");
@@ -144,6 +149,7 @@ export default function Register() {
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"
         onClick={handleGoogle}
+        type="button"
       >
         <GoogleIcon className="w-5 h-5 mr-2" />
         Continue with Google
@@ -190,6 +196,7 @@ export default function Register() {
               id="password"
               type="password"
               autoComplete="new-password"
+              minLength={8}
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -206,6 +213,7 @@ export default function Register() {
               id="confirm"
               type="password"
               autoComplete="new-password"
+              minLength={8}
               placeholder="••••••••"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
