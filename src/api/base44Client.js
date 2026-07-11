@@ -1,7 +1,9 @@
 import { createClient } from '@base44/sdk';
 import { appParams } from '@/lib/app-params';
+import { runtimeConfig } from '@/config/runtime-config';
 
-const { appId, token, functionsVersion, appBaseUrl } = appParams;
+const { token, functionsVersion } = appParams;
+const { appId, appBaseUrl } = runtimeConfig;
 
 //Create a client with authentication required
 export const base44 = createClient({
