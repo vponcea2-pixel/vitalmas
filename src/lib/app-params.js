@@ -12,7 +12,7 @@ const toSnakeCase = (str) => {
 	return str.replace(/([A-Z])/g, '_$1').toLowerCase();
 }
 
-const getAppParamValue = (paramName, { defaultValue = undefined, removeFromUrl = false } = {}) => {
+const getAppParamValue = (paramName, { defaultValue = undefined, removeFromUrl = false, allowStored = true } = {}) => {
 	if (isNode) {
 		return defaultValue;
 	}
@@ -33,7 +33,7 @@ const getAppParamValue = (paramName, { defaultValue = undefined, removeFromUrl =
 		storage.setItem(storageKey, defaultValue);
 		return defaultValue;
 	}
-	const storedValue = storage.getItem(storageKey);
+	const storedValue = allowStored ? storage.getItem(storageKey) : null;
 	if (storedValue) {
 		return storedValue;
 	}
@@ -45,9 +45,10 @@ const getAppParams = () => {
 		storage.removeItem('base44_access_token');
 		storage.removeItem('token');
 	}
+	const hasActiveLogin = !isNode && storage.getItem('vitalmas_auth_enabled') === 'true';
 	return {
 		appId: getAppParamValue("app_id", { defaultValue: import.meta.env.VITE_BASE44_APP_ID || DEFAULT_APP_ID }),
-		token: getAppParamValue("access_token", { removeFromUrl: true }),
+		token: getAppParamValue("access_token", { removeFromUrl: true, allowStored: hasActiveLogin }),
 		fromUrl: getAppParamValue("from_url", { defaultValue: window.location.href }),
 		functionsVersion: getAppParamValue("functions_version", { defaultValue: import.meta.env.VITE_BASE44_FUNCTIONS_VERSION }),
 		appBaseUrl: getAppParamValue("app_base_url", { defaultValue: import.meta.env.VITE_BASE44_APP_BASE_URL || DEFAULT_APP_BASE_URL }),

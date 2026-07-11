@@ -13,7 +13,8 @@ export default defineConfig({
       legacySDKImports: process.env.BASE44_LEGACY_SDK_IMPORTS === 'true',
       hmrNotifier: true,
       navigationNotifier: true,
-      analyticsTracker: true,
+      // GitHub Pages is static and cannot receive Base44's relative /api tracking calls.
+      analyticsTracker: false,
       visualEditAgent: true
     }),
     react(),

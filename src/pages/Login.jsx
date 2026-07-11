@@ -21,6 +21,7 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
+      localStorage.setItem('vitalmas_auth_enabled', 'true');
       window.location.href = `${window.location.origin}${window.location.pathname}#/`;
     } catch (err) {
       setError(err.message || "Invalid email or password");
