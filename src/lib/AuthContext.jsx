@@ -97,6 +97,7 @@ export const AuthProvider = ({ children }) => {
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
+      setAuthError(null);
       localStorage.setItem('vitalmas_auth_enabled', 'true');
       setIsLoadingAuth(false);
       setAuthChecked(true);

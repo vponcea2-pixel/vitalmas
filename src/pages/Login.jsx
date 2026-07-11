@@ -8,8 +8,10 @@ import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
 import { runtimeConfig } from "@/config/runtime-config";
+import { useAuth } from "@/lib/AuthContext";
 
 export default function Login() {
+  const { checkUserAuth } = useAuth();
   const { search } = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,8 +24,12 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      await base44.auth.loginViaEmailPassword(email, password);
+      const login = await base44.auth.loginViaEmailPassword(email, password);
+      if (login?.access_token) {
+        base44.setToken(login.access_token);
+      }
       localStorage.setItem('vitalmas_auth_enabled', 'true');
+      await checkUserAuth();
       window.location.href = `${window.location.origin}${window.location.pathname}#/`;
     } catch (err) {
       setError(err.message || "Invalid email or password");

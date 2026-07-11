@@ -45,10 +45,12 @@ const getAppParams = () => {
 		storage.removeItem('base44_access_token');
 		storage.removeItem('token');
 	}
-	const hasActiveLogin = !isNode && storage.getItem('vitalmas_auth_enabled') === 'true';
 	return {
 		appId: getAppParamValue("app_id", { defaultValue: import.meta.env.VITE_BASE44_APP_ID || DEFAULT_APP_ID }),
-		token: getAppParamValue("access_token", { removeFromUrl: true, allowStored: hasActiveLogin }),
+		// The SDK persists a valid Base44 token after password or Google login.
+		// Always pass it to the client; AuthContext validates it and removes it
+		// silently if it is expired, rather than incorrectly showing guest mode.
+		token: getAppParamValue("access_token", { removeFromUrl: true }),
 		fromUrl: getAppParamValue("from_url", { defaultValue: window.location.href }),
 		functionsVersion: getAppParamValue("functions_version", { defaultValue: import.meta.env.VITE_BASE44_FUNCTIONS_VERSION }),
 		appBaseUrl: getAppParamValue("app_base_url", { defaultValue: import.meta.env.VITE_BASE44_APP_BASE_URL || DEFAULT_APP_BASE_URL }),
