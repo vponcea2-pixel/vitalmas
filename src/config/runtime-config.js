@@ -12,5 +12,13 @@ if (typeof window !== 'undefined') {
   if (!url.searchParams.has('analytics-enable')) {
     url.searchParams.set('analytics-enable', 'false');
     window.history.replaceState({}, document.title, url.toString());
+
+    // The SDK reads this flag while it is constructed. Remove it immediately
+    // afterwards so visitors keep one stable, shareable URL.
+    queueMicrotask(() => {
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('analytics-enable');
+      window.history.replaceState({}, document.title, cleanUrl.toString());
+    });
   }
 }
