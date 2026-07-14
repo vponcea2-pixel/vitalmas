@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 export default function GeneratedRecipe({ recipe, ingredients, onBack, onBackToScanner }) {
   return (
     <div className="max-w-lg mx-auto">
-      <div className="bg-gradient-to-br from-[#FF7B00] to-[#E06800] text-white p-4 pb-6 rounded-b-3xl">
+      <div className="bg-gradient-to-br from-[#4CAF50] to-[#388E3C] text-white p-4 pb-6 rounded-b-3xl">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="p-2 rounded-full hover:bg-white/20 transition-colors">
             <ArrowLeft className="w-5 h-5" />

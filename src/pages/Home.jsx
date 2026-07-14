@@ -54,7 +54,7 @@ export default function Home() {
       {/* Scanner CTA */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
         <Link to="/scanner">
-          <div className="bg-gradient-to-br from-[#FF7B00] to-[#FF9A40] rounded-3xl p-8 flex flex-col items-center justify-center text-white shadow-lg min-h-[160px] relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#4CAF50] to-[#388E3C] rounded-3xl p-8 flex flex-col items-center justify-center text-white shadow-lg min-h-[160px] relative overflow-hidden">
             {/* decorative circles */}
             <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/10 rounded-full" />
             <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-white/10 rounded-full" />
@@ -62,7 +62,7 @@ export default function Home() {
               <Camera className="w-9 h-9 text-white" />
             </div>
             <p className="text-lg font-bold relative z-10">Escanear Comida con Foto</p>
-            <p className="text-sm text-orange-100 mt-1 relative z-10">Calcula Calorías Al Instante</p>
+            <p className="text-sm text-green-100 mt-1 relative z-10">Calcula Calorías Al Instante</p>
           </div>
         </Link>
       </motion.div>

@@ -108,7 +108,7 @@ Genera la MEJOR receta posible usando estos ingredientes, preferiblemente una re
         <CameraCapture onCapture={scanIngredient} onClose={() => setShowCamera(false)} label="Escanear ingrediente" />
       )}
 
-      <div className="bg-gradient-to-br from-[#FF7B00] to-[#E06800] text-white p-4 pb-6 rounded-b-3xl">
+      <div className="bg-gradient-to-br from-[#4CAF50] to-[#388E3C] text-white p-4 pb-6 rounded-b-3xl">
         <div className="flex items-center gap-3">
           <button onClick={onBack} className="p-2 rounded-full hover:bg-white/20 transition-colors">
             <ArrowLeft className="w-5 h-5" />
@@ -153,7 +153,7 @@ Genera la MEJOR receta posible usando estos ingredientes, preferiblemente una re
         {/* Scanning indicator */}
         {scanning && (
           <div className="bg-card rounded-2xl border border-border p-4 flex items-center gap-3">
-            <div className="w-8 h-8 border-2 border-[#FF7B00] border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-[#4CAF50] border-t-transparent rounded-full animate-spin" />
             <span className="text-sm font-medium">Identificando ingrediente...</span>
           </div>
         )}
@@ -189,7 +189,7 @@ Genera la MEJOR receta posible usando estos ingredientes, preferiblemente una re
                   placeholder="Nombre del ingrediente..."
                   className="rounded-xl"
                 />
-                <Button onClick={addManual} className="rounded-xl bg-[#FF7B00] hover:bg-[#E06800] text-white">
+                <Button onClick={addManual} className="rounded-xl bg-[#4CAF50] hover:bg-[#43A047] text-white">
                   Agregar
                 </Button>
               </div>
@@ -203,7 +203,7 @@ Genera la MEJOR receta posible usando estos ingredientes, preferiblemente una re
             <Button
               onClick={generateRecipe}
               disabled={generatingRecipe}
-              className="w-full h-14 rounded-xl bg-gradient-to-r from-[#FF7B00] to-[#FF9A40] hover:from-[#E06800] hover:to-[#FF7B00] text-white text-base font-bold"
+              className="w-full h-14 rounded-xl bg-gradient-to-r from-[#4CAF50] to-[#66BB6A] hover:from-[#388E3C] hover:to-[#4CAF50] text-white text-base font-bold"
             >
               {generatingRecipe ? (
                 <>
